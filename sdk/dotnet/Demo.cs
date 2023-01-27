@@ -9,31 +9,18 @@ using Pulumi.Serialization;
 
 namespace Pulumi.Demo
 {
-    [DemoResourceType("demo:index:StaticPage")]
-    public partial class StaticPage : Pulumi.ComponentResource
+    [DemoResourceType("demo:index:Demo")]
+    public partial class Demo : Pulumi.ComponentResource
     {
         /// <summary>
-        /// The bucket resource.
-        /// </summary>
-        [Output("bucket")]
-        public Output<Pulumi.Aws.S3.Bucket> Bucket { get; private set; } = null!;
-
-        /// <summary>
-        /// The website URL.
-        /// </summary>
-        [Output("websiteUrl")]
-        public Output<string> WebsiteUrl { get; private set; } = null!;
-
-
-        /// <summary>
-        /// Create a StaticPage resource with the given unique name, arguments, and options.
+        /// Create a Demo resource with the given unique name, arguments, and options.
         /// </summary>
         ///
         /// <param name="name">The unique name of the resource</param>
         /// <param name="args">The arguments used to populate this resource's properties</param>
         /// <param name="options">A bag of options that control this resource's behavior</param>
-        public StaticPage(string name, StaticPageArgs args, ComponentResourceOptions? options = null)
-            : base("demo:index:StaticPage", name, args ?? new StaticPageArgs(), MakeResourceOptions(options, ""), remote: true)
+        public Demo(string name, DemoArgs args, ComponentResourceOptions? options = null)
+            : base("demo:index:Demo", name, args ?? new DemoArgs(), MakeResourceOptions(options, ""), remote: true)
         {
         }
 
@@ -50,15 +37,15 @@ namespace Pulumi.Demo
         }
     }
 
-    public sealed class StaticPageArgs : Pulumi.ResourceArgs
+    public sealed class DemoArgs : Pulumi.ResourceArgs
     {
         /// <summary>
-        /// The HTML content for index.html.
+        /// The static page.
         /// </summary>
-        [Input("indexContent", required: true)]
-        public Input<string> IndexContent { get; set; } = null!;
+        [Input("staticPage", required: true)]
+        public Input<Pulumi.Demo.StaticPage> StaticPage { get; set; } = null!;
 
-        public StaticPageArgs()
+        public DemoArgs()
         {
         }
     }

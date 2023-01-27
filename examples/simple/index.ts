@@ -1,6 +1,6 @@
-import * as xyz from "@pulumi/xyz";
+import * as demo from "@pulumi/demo";
 
-const page = new xyz.StaticPage("page", {
+const page = new demo.StaticPage("page", {
     indexContent: "<html><body><p>Hello world!</p></body></html>",
 });
 
