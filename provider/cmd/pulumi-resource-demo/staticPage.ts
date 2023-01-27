@@ -25,11 +25,13 @@ export interface StaticPageArgs {
 interface StaticPageData {
     bucket: aws.s3.Bucket;
     websiteUrl: string;
+    role: aws.iam.Role;
 }
 
 export abstract class StaticPageComponent<TData = any> extends (pulumi.ComponentResource)<TData> {
     public bucket!: aws.s3.Bucket | pulumi.Output<aws.s3.Bucket>;
     public websiteUrl!: string | pulumi.Output<string>;
+    public role!: aws.iam.Role | pulumi.Output<aws.iam.Role>;
 
     constructor(name: string, args: pulumi.Inputs, opts: pulumi.ComponentResourceOptions = {}) {
         super("demo:index:StaticPage", name, opts.urn ? { bucket: undefined, websiteUrl: undefined } : { name, args, opts }, opts);
@@ -84,12 +86,32 @@ export class StaticPage extends StaticPageComponent<StaticPageData> {
             parent: bucket,
         });
 
+        const testRole = new aws.iam.Role('demo-role', {
+            name: bucket.bucket.apply((name) => `demo-role-${name}`),
+            assumeRolePolicy: JSON.stringify({
+                Version: "2012-10-17",
+                Statement: [
+                    {
+                        Action: ["sts:AssumeRole"],
+                        Effect: "Allow",
+                        Principal: {
+                            Service: ["ec2.amazonaws.com"],
+                        },
+                    },
+                ],
+            }),
+        }, {
+            parent: this,
+        });
+
         this.bucket = pulumi.output(bucket);
         this.websiteUrl = bucket.websiteEndpoint;
+        this.role = pulumi.output(testRole);
 
         this.registerOutputs({
             bucket,
             websiteUrl: bucket.websiteEndpoint,
+            role: testRole,
         });
     }
 }

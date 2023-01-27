@@ -19,6 +19,12 @@ namespace Pulumi.Demo
         public Output<Pulumi.Aws.S3.Bucket> Bucket { get; private set; } = null!;
 
         /// <summary>
+        /// The test role
+        /// </summary>
+        [Output("role")]
+        public Output<Pulumi.Aws.Iam.Role> Role { get; private set; } = null!;
+
+        /// <summary>
         /// The website URL.
         /// </summary>
         [Output("websiteUrl")]

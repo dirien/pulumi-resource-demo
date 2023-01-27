@@ -89,6 +89,7 @@ class StaticPage(pulumi.ComponentResource):
                 raise TypeError("Missing required property 'index_content'")
             __props__.__dict__["index_content"] = index_content
             __props__.__dict__["bucket"] = None
+            __props__.__dict__["role"] = None
             __props__.__dict__["website_url"] = None
         super(StaticPage, __self__).__init__(
             'demo:index:StaticPage',
@@ -104,6 +105,14 @@ class StaticPage(pulumi.ComponentResource):
         The bucket resource.
         """
         return pulumi.get(self, "bucket")
+
+    @property
+    @pulumi.getter
+    def role(self) -> pulumi.Output['pulumi_aws.iam.Role']:
+        """
+        The test role
+        """
+        return pulumi.get(self, "role")
 
     @property
     @pulumi.getter(name="websiteUrl")

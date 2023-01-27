@@ -25,7 +25,7 @@ export class Demo extends pulumi.ComponentResource {
         super("demo:index:Demo", name, args, opts);
 
         const testRole = new aws.iam.Role('demo-role', {
-            name: args.staticPage.bucket.id.apply((id) => `demo-role-${id}`),
+            name: args.staticPage.role.name.apply((name) => `${name}-two`),
             assumeRolePolicy: JSON.stringify({
                 Version: "2012-10-17",
                 Statement: [

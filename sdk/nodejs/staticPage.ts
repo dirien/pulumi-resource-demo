@@ -26,6 +26,10 @@ export class StaticPage extends pulumi.ComponentResource {
      */
     public /*out*/ readonly bucket!: pulumi.Output<pulumiAws.s3.Bucket>;
     /**
+     * The test role
+     */
+    public /*out*/ readonly role!: pulumi.Output<pulumiAws.iam.Role>;
+    /**
      * The website URL.
      */
     public /*out*/ readonly websiteUrl!: pulumi.Output<string>;
@@ -46,9 +50,11 @@ export class StaticPage extends pulumi.ComponentResource {
             }
             resourceInputs["indexContent"] = args ? args.indexContent : undefined;
             resourceInputs["bucket"] = undefined /*out*/;
+            resourceInputs["role"] = undefined /*out*/;
             resourceInputs["websiteUrl"] = undefined /*out*/;
         } else {
             resourceInputs["bucket"] = undefined /*out*/;
+            resourceInputs["role"] = undefined /*out*/;
             resourceInputs["websiteUrl"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);

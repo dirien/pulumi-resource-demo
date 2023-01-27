@@ -20,11 +20,16 @@
                 "websiteUrl": {
                     "type": "string",
                     "description": "The website URL."
+                },
+                "role": {
+                    "$ref": "/aws/v4.0.0/schema.json#/resources/aws:iam%2Frole:Role",
+                    "description": "The test role"
                 }
             },
             "required": [
                 "bucket",
-                "websiteUrl"
+                "websiteUrl",
+                "role"
             ]
         },
         "demo:index:Demo": {

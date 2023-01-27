@@ -8,6 +8,7 @@ import (
 	"reflect"
 
 	"github.com/pkg/errors"
+	"github.com/pulumi/pulumi-aws/sdk/v4/go/aws/iam"
 	"github.com/pulumi/pulumi-aws/sdk/v4/go/aws/s3"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
@@ -17,6 +18,8 @@ type StaticPage struct {
 
 	// The bucket resource.
 	Bucket s3.BucketOutput `pulumi:"bucket"`
+	// The test role
+	Role iam.RoleOutput `pulumi:"role"`
 	// The website URL.
 	WebsiteUrl pulumi.StringOutput `pulumi:"websiteUrl"`
 }

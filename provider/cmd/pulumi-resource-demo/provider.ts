@@ -60,6 +60,7 @@ async function constructStaticPage(name: string, inputs: pulumi.Inputs,
         state: {
             bucket: staticPage.bucket,
             websiteUrl: staticPage.websiteUrl,
+            role: staticPage.role,
         },
     };
 }
