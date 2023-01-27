@@ -19,7 +19,19 @@ import { StaticPage, StaticPageArgs } from "./staticPage";
 import { Demo, DemoArgs } from "./demo";
 
 export class Provider implements provider.Provider {
-    constructor(readonly version: string, readonly schema: string) { }
+    constructor(readonly version: string, readonly schema: string) { 
+        pulumi.runtime.registerResourceModule("demo", "index", {
+            version: this.version,
+            construct: (name, type, urn) => {
+                switch (type) {
+                    case "demo:index:StaticPage":
+                        return new StaticPage(name, <any>undefined, { urn });
+                    default:
+                        throw new Error(`unknown resource type ${type}`);
+                }
+            },
+        });
+    }
 
     async construct(name: string, type: string, inputs: pulumi.Inputs,
         options: pulumi.ComponentResourceOptions): Promise<provider.ConstructResult> {
