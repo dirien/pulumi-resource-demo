@@ -19,10 +19,22 @@ import { StaticPage, StaticPageArgs } from "./staticPage";
 import { Demo, DemoArgs } from "./demo";
 
 export class Provider implements provider.Provider {
-    constructor(readonly version: string, readonly schema: string) { }
+    constructor(readonly version: string, readonly schema: string) {
+        pulumi.runtime.registerResourceModule("demo", "index", {
+            version: this.version,
+            construct: (name, type, urn) => {
+                switch (type) {
+                    case "demo:index:StaticPage":
+                        return new StaticPage(name, <any>undefined, { urn });
+                    default:
+                        throw new Error(`unknown resource type ${type}`);
+                }
+            },
+        });
+    }
 
     async construct(name: string, type: string, inputs: pulumi.Inputs,
-        options: pulumi.ComponentResourceOptions): Promise<provider.ConstructResult> {
+                    options: pulumi.ComponentResourceOptions): Promise<provider.ConstructResult> {
 
         // TODO: Add support for additional component resources here.
         switch (type) {
@@ -37,7 +49,7 @@ export class Provider implements provider.Provider {
 }
 
 async function constructStaticPage(name: string, inputs: pulumi.Inputs,
-    options: pulumi.ComponentResourceOptions): Promise<provider.ConstructResult> {
+                                   options: pulumi.ComponentResourceOptions): Promise<provider.ConstructResult> {
 
     // Create the component resource.
     const staticPage = new StaticPage(name, inputs as StaticPageArgs, options);
@@ -54,7 +66,7 @@ async function constructStaticPage(name: string, inputs: pulumi.Inputs,
 
 
 async function constructDemo(name: string, inputs: pulumi.Inputs,
-    options: pulumi.ComponentResourceOptions): Promise<provider.ConstructResult> {
+                             options: pulumi.ComponentResourceOptions): Promise<provider.ConstructResult> {
 
     // Create the component resource.
     const demo = new Demo(name, inputs as DemoArgs, options);

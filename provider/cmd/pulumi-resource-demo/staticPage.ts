@@ -22,12 +22,28 @@ export interface StaticPageArgs {
     indexContent: pulumi.Input<string>;
 }
 
-export class StaticPage extends pulumi.ComponentResource {
-    public readonly bucket: aws.s3.Bucket;
-    public readonly websiteUrl: pulumi.Output<string>;
+interface StaticPageData {
+    bucket: aws.s3.Bucket;
+    websiteUrl: string;
+}
 
-    constructor(name: string, args: StaticPageArgs, opts?: pulumi.ComponentResourceOptions) {
-        super("demo:index:StaticPage", name, args, opts);
+export abstract class StaticPageComponent<TData = any> extends (pulumi.ComponentResource)<TData> {
+    public bucket!: aws.s3.Bucket | pulumi.Output<aws.s3.Bucket>;
+    public websiteUrl!: string | pulumi.Output<string>;
+
+    constructor(name: string, args: pulumi.Inputs, opts: pulumi.ComponentResourceOptions = {}) {
+        super("demo:index:StaticPage", name, opts.urn ? { bucket: undefined, websiteUrl: undefined } : { name, args, opts }, opts);
+    }
+}
+
+export class StaticPage extends StaticPageComponent<StaticPageData> {
+    constructor(name: string, args: StaticPageArgs, opts: pulumi.ComponentResourceOptions) {
+        super(name, args, opts);
+
+        if (opts?.urn) {
+            // If we're being deserialized, just read the state.
+            return;
+        }
 
         // Create a bucket and expose a website index document.
         const bucket = new aws.s3.Bucket(name, {
@@ -68,7 +84,7 @@ export class StaticPage extends pulumi.ComponentResource {
             parent: bucket,
         });
 
-        this.bucket = bucket;
+        this.bucket = pulumi.output(bucket);
         this.websiteUrl = bucket.websiteEndpoint;
 
         this.registerOutputs({
